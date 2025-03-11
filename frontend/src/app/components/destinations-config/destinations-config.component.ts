@@ -73,9 +73,16 @@ export class DestinationsConfigComponent {
 
   selectedFormat: string = 'Format';
 
+  // dropdownOpen = false;
+
+  // toggleDropdown() {
+  //   this.dropdownOpen = !this.dropdownOpen;
+  // }
+
   selectFormat(format: string) {
     this.selectedFormat = format;
     this.updateNextButtonState();
+    // this.dropdownOpen = false;
   }
 
   ngOnInit() {

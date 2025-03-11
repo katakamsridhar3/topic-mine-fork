@@ -86,7 +86,7 @@ export class DataSourcesConfigComponent {
   sheetNameGoogleSheetsFirstTermFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   termColumnGoogleSheetsFirstTermFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   startingRowGoogleSheetsFirstTermFormControl = new FormControl('', [Validators.required, Validators.min(1), integerValidator()]);
-  limitGoogleSheetsFirstTermFormControl = new FormControl('', [Validators.required, Validators.min(1), integerValidator()]);
+  limitGoogleSheetsFirstTermFormControl = new FormControl('', [Validators.required, Validators.min(0), integerValidator()]);
   // Optional Google Sheets first term fields
   descriptionColumnGoogleSheetsFirstTermFormControl = new FormControl('', []);
   skuColumnGoogleSheetsFirstTermFormControl = new FormControl('', []);
@@ -115,7 +115,7 @@ export class DataSourcesConfigComponent {
   sheetNameGoogleSheetsSecondTermFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   termColumnGoogleSheetsSecondTermFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   startingRowGoogleSheetsSecondTermFormControl = new FormControl('', [Validators.required, Validators.min(1), integerValidator()]);
-  limitGoogleSheetsSecondTermFormControl = new FormControl('', [Validators.required, Validators.min(1), integerValidator()]);
+  limitGoogleSheetsSecondTermFormControl = new FormControl('', [Validators.required, Validators.min(0), integerValidator()]);
   // Optional Google Sheets second term fields
   descriptionColumnGoogleSheetsSecondTermFormControl = new FormControl('', []);
 
@@ -126,10 +126,10 @@ export class DataSourcesConfigComponent {
   termColumnBigQuerySecondTermFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   // Optional BigQuery second term fields
   descriptionColumnBigQuerySecondTermFormControl = new FormControl('', []);
-  limitBigQuerySecondTermFormControl = new FormControl('', [Validators.min(1), integerValidator()]);
+  limitBigQuerySecondTermFormControl = new FormControl('', [Validators.min(0), integerValidator()]);
 
   // Optional Google Trends second term fields
-  limitGoogleTrendsSecondTermFormControl = new FormControl('', [Validators.min(1), integerValidator()]);
+  limitGoogleTrendsSecondTermFormControl = new FormControl('', [Validators.min(0), integerValidator()]);
 
 
 

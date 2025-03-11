@@ -34,9 +34,12 @@ import { ContentTypeConfig } from '../content-type-selection/content-type-select
 import { DestinationConfig } from '../destinations-config/destinations-config.component';
 import { DataSourcesConfig } from '../data-sources-config/data-sources-config.component';
 import { ContentGenerationConfig } from '../content-generation-config/content-generation-config.component'
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { GlobalService } from '../../services/global.service';
+import { Toast } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { Ripple } from 'primeng/ripple';
 
 @Component({
   selector: 'app-drawer',
@@ -51,14 +54,19 @@ import { GlobalService } from '../../services/global.service';
     DestinationsConfigComponent,
     ContentGenerationConfigComponent,
     ExecutionStartedComponent,
-    HttpClientModule
+    HttpClientModule,
+    Toast,
+    Ripple
   ],
   templateUrl: './drawer.component.html',
   styleUrl: './drawer.component.css',
+  providers: [
+    MessageService
+  ]
 })
 export class DrawerComponent {
   // constructor(private requestService: RequestService) { } // Inject the service
-  constructor(private http: HttpClient, public globalService: GlobalService) { }
+  constructor(private http: HttpClient, private messageService: MessageService, public globalService: GlobalService) { }
 
   @ViewChild('stepper') stepper!: MatStepper;
 
@@ -81,6 +89,10 @@ export class DrawerComponent {
 
   path: string = '';
   body: any = {};
+
+  showToast(severity: string, summary: string, detail: string) {
+    this.messageService.add({ severity: severity, summary: summary, detail: detail, sticky: true });
+  }
 
   previousView() {
     if (this.currentView === 'content-type-selection') {
@@ -140,31 +152,33 @@ export class DrawerComponent {
   receiveContentGenerationConfig(value: any) {
     this.contentGenerationConfig = value;
 
+    if (this.globalService.baseUrl === null || this.globalService.baseUrl === undefined || this.globalService.baseUrl === '') {
+      this.showToast('error', 'Error', 'No base URL specified, check config')
+      this.requestFailed = true;
+
+      return;
+    }
+
     this.isSendingRequest = true;
     this.requestFailed = false;
-
-    console.log(value);
 
     this.generateQueryPath();
     this.generateBodyParams();
 
-    console.log('BASE URL: ' + this.globalService.baseUrl)
-    console.log('QUERY PATH: ' + this.path)
-    console.log('BODY PARAMS: ' + JSON.stringify(this.body, null, 2));
+    // console.log('BASE URL: ' + this.globalService.baseUrl)
+    // console.log('QUERY PATH: ' + this.path)
+    // console.log('BODY PARAMS: ' + JSON.stringify(this.body, null, 2));
 
     this.http.post(this.globalService.baseUrl + this.path, this.body).subscribe({
       next: (response) => {
-        // Handle success
-        console.log('Success:', response);
         this.isSendingRequest = false;
         this.nextView();
       },
       error: (error) => {
-        // Handle errors
-        console.error('Error:', error);
         this.isSendingRequest = false;
         this.requestFailed = true;
-        // Display an error message to the user
+
+        this.showToast('error', 'Error', error.message);
       }
     });
   }

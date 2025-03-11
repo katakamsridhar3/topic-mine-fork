@@ -6,6 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { GlobalService } from '../../services/global.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
+import { Ripple } from 'primeng/ripple';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -17,19 +20,19 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 
 @Component({
   selector: 'app-settings',
-  imports: [FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatButtonModule],
+  imports: [FormsModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatButtonModule, Toast, Ripple],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css'
+  styleUrl: './settings.component.css',
+  providers: [MessageService]
 })
 export class SettingsComponent {
-  constructor(public globalService: GlobalService, private router: Router) {}
+  constructor(public globalService: GlobalService, private router: Router, private messageService: MessageService) {}
 
 
   matcher = new MyErrorStateMatcher();
 
   isSaveButtonDisabled: boolean = true;
   isSendingRequest: boolean = false;
-  mustOpenModal: boolean = false;
   requestFailed: boolean = false;
 
   baseUrlFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
@@ -48,23 +51,21 @@ export class SettingsComponent {
     } else {
       this.isSaveButtonDisabled = true;
     }
-
-    if (this.customerIdFormControl.value === '' || this.developerTokenFormControl.value === '') {
-      this.mustOpenModal = true;
-    } else {
-      this.mustOpenModal = false;
-    }
   }
 
   goBack() {
     this.router.navigateByUrl('/home');
   }
 
-  openModal () {
-
+  showToast(severity: string, summary: string, detail: string) {
+    this.messageService.add({ severity: severity, summary: summary, detail: detail, sticky: true });
   }
 
   saveSettings() {
+    if (this.customerIdFormControl.value === '' || this.developerTokenFormControl.value === '') {
+      this.showToast('warn', 'Warning', 'If any of the fields "Google Ads Customer ID" or "Google Ads developer token" is not present, the Google Ads Keyword Planner will NOT be used to generate keywords. Instead, if keyword generation is enabled, Gemini will be used.')
+    }
+
     this.globalService.setBaseUrl(this.baseUrlFormControl.value!);
     this.globalService.setCustomerId(this.customerIdFormControl.value!);
     this.globalService.setDeveloperToken(this.developerTokenFormControl.value!);
