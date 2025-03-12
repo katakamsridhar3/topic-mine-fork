@@ -17,34 +17,27 @@
   </mat-chip-listbox>
 
   <div class="row">
-    <div class="col-3">
+    <div class="col-4">
       <label for="number-of-headlines-input" class="form-label"># of headlines*</label>
       <div class="input-group">
         <input type="number" required class="form-control" id="number-of-headlines-input" aria-describedby="basic-addon3 basic-addon4" matInput [formControl]="headlinesCounterFormControl" [errorStateMatcher]="matcher">
       </div>
       <div class="form-text" id="number-of-headlines-hint">Min.: 1, max.: 15</div>
     </div>
-    <div class="col-3">
+    <div class="col-4">
       <label for="number-of-descriptions-input" class="form-label"># of descriptions*</label>
       <div class="input-group">
         <input type="number" required class="form-control" id="number-of-descriptions-input" aria-describedby="basic-addon3 basic-addon4" matInput [formControl]="descriptionsCounterFormControl" [errorStateMatcher]="matcher">
       </div>
       <div class="form-text" id="number-of-descriptions-hint">Min.: 1, max.: 4</div>
     </div>
-    <div class="col-3">
+    <div class="col-4">
       <label for="language-input" class="form-label">Language</label>
       <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ selectedLanguage }}</button>
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" (click)="selectLanguage('Spanish')">Spanish</a></li>
         <li><a class="dropdown-item" (click)="selectLanguage('English')">English</a></li>
       </ul>
-    </div>
-    <div class="col-3">
-      <label for="gemini-model-input" class="form-label">Gemini model</label>
-      <div class="input-group">
-        <input type="text" class="form-control" id="gemini-model-input" aria-describedby="basic-addon3 basic-addon4" matInput [formControl]="geminiModelFormControl" [errorStateMatcher]="matcher">
-      </div>
-      <div class="form-text" id="gemini-model-hint">Recommended to leave empty to use default model 1.5 Flash. Can indicate custom fine-tuned model here.</div>
     </div>
   </div>
 

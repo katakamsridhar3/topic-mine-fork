@@ -78,7 +78,6 @@ export interface ContentGenerationConfig {
   genericDescriptions: string[] | null;
   advertiserName: string;
   country: string;
-  geminiModel: string;
   language: string;
 }
 
@@ -128,7 +127,6 @@ export class ContentGenerationConfigComponent {
   descriptionsCounterFormControl = new FormControl('', [Validators.required, Validators.min(1), Validators.max(4), integerValidator()]);
   advertiserNameFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   countryFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
-  geminiModelFormControl = new FormControl('', []);
   headlinesBlocklistingFormControl = new FormControl('', []);
   descriptionsBlocklistingFormControl = new FormControl('', []);
   headlinesRegexBlocklistingFormControl = new FormControl('', []);
@@ -186,7 +184,6 @@ export class ContentGenerationConfigComponent {
       genericDescriptions: this.genericDescriptionsFormControl.value?.split(',')?.map(item => item.trim()).filter(item => item !== '') || null,
       advertiserName: this.advertiserNameFormControl.value!,
       country: this.countryFormControl.value!,
-      geminiModel: this.geminiModelFormControl.value ?? 'gemini-1.5-flash',
       language: this.selectedLanguage,
     };
 

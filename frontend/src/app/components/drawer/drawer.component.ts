@@ -321,7 +321,7 @@ export class DrawerComponent {
     this.body['generate_keywords'] = this.contentGenerationConfig!.generateKeywords;
     this.body['advertiser_name'] = this.contentGenerationConfig!.advertiserName;
     this.body['country'] = this.contentGenerationConfig!.country;
-    this.body['gemini_model'] = this.contentGenerationConfig!.geminiModel;
+    this.body['gemini_model'] = this.globalService.geminiModel;
     this.body['language'] = this.contentGenerationConfig!.language;
   }
 

@@ -38,15 +38,16 @@ export class SettingsComponent {
   baseUrlFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
   customerIdFormControl = new FormControl('', []);
   developerTokenFormControl = new FormControl('', []);
+  geminiModelFormControl = new FormControl('', [Validators.required, Validators.nullValidator]);
+
 
   ngOnInit() {
     this.baseUrlFormControl.valueChanges.subscribe(() => this.updateSaveButtonState());
-    this.customerIdFormControl.valueChanges.subscribe(() => this.updateSaveButtonState());
-    this.developerTokenFormControl.valueChanges.subscribe(() => this.updateSaveButtonState());
+    this.geminiModelFormControl.valueChanges.subscribe(() => this.updateSaveButtonState());
   }
 
   updateSaveButtonState() {
-    if (this.baseUrlFormControl.valid) {
+    if (this.baseUrlFormControl.valid && this.geminiModelFormControl.valid) {
       this.isSaveButtonDisabled = false;
     } else {
       this.isSaveButtonDisabled = true;
@@ -67,8 +68,9 @@ export class SettingsComponent {
     }
 
     this.globalService.setBaseUrl(this.baseUrlFormControl.value!);
-    this.globalService.setCustomerId(this.customerIdFormControl.value!);
+    this.globalService.setCustomerId(this.customerIdFormControl.value!.replaceAll('-', ''));
     this.globalService.setDeveloperToken(this.developerTokenFormControl.value!);
+    this.globalService.setGeminiModel(this.geminiModelFormControl.value ?? 'gemini-2.0-flash');
   }
 
 }

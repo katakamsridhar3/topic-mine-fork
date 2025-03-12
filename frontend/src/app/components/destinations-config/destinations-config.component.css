@@ -53,3 +53,24 @@
   grid-template-columns: repeat(1, 1fr);
   gap: 5px;
 }
+
+input::placeholder {
+  color: rgb(186, 186, 186);
+}
+
+input::-webkit-input-placeholder {
+  color: rgb(186, 186, 186);
+}
+
+input::-moz-placeholder {
+  color: rgb(186, 186, 186);
+  opacity: 1;
+}
+
+input:-ms-input-placeholder {
+  color: rgb(186, 186, 186);
+}
+
+input::-ms-input-placeholder {
+  color: rgb(186, 186, 186);
+}

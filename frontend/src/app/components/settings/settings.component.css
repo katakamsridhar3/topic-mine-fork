@@ -5,3 +5,24 @@
   padding-inline: 20%;
   padding-top: 48px;
 }
+
+input::placeholder {
+  color: rgb(186, 186, 186);
+}
+
+input::-webkit-input-placeholder {
+  color: rgb(186, 186, 186);
+}
+
+input::-moz-placeholder {
+  color: rgb(186, 186, 186);
+  opacity: 1;
+}
+
+input:-ms-input-placeholder {
+  color: rgb(186, 186, 186);
+}
+
+input::-ms-input-placeholder {
+  color: rgb(186, 186, 186);
+}
