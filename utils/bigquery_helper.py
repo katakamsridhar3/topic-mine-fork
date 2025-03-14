@@ -21,7 +21,6 @@ working with BigQuery.
 import logging
 
 from google.cloud import bigquery
-from utils.authentication_helper import Authenticator
 
 # Logger config
 logging.basicConfig()
@@ -31,19 +30,10 @@ logging.root.setLevel(logging.INFO)
 class BigQueryHelper:
   """BigQuery helper to read data from BigQuery using the specified client."""
 
-  def __init__(self, config: dict[str, str]):
+  def __init__(self):
     """Initialize a BigQueryHelper instance.
-
-    Args:
-      config (dict[str, str]): A dictionary containing configuration parameters.
     """
-    authenticator = Authenticator()
-    creds = authenticator.authenticate(config)
-
-    self.bigquery_client = bigquery.Client(
-      credentials=creds,
-      project=config['project_id']
-    )
+    self.bigquery_client = bigquery.Client()
 
   def read_bigquery_column(
       self,

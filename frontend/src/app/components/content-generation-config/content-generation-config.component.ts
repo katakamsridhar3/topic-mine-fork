@@ -184,7 +184,7 @@ export class ContentGenerationConfigComponent {
       genericDescriptions: this.genericDescriptionsFormControl.value?.split(',')?.map(item => item.trim()).filter(item => item !== '') || null,
       advertiserName: this.advertiserNameFormControl.value!,
       country: this.countryFormControl.value!,
-      language: this.selectedLanguage,
+      language: this.selectedLanguage == 'Spanish' ? 'ES' : this.selectedLanguage == 'English' ? 'EN' : 'PT',
     };
 
     this.contentGenerationConfigEvent.emit(config);

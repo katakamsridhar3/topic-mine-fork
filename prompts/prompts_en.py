@@ -41,6 +41,13 @@ prompts_en = {
                                   The response must follow exactly that format. It does not have to contain any additional commas, whitespaces or line breaks. It must be just a comma-separated list of texts between square brackets and thats it.
                                   """
     },
+    'KEYWORDS': """
+                Give me a list of up to 10 keywords for a Google Ads ad related to the term '{term}'.
+                Response must be in exactly the following format:
+                ["Keyword 1", "Keyword 2", ..., "Keyword N"]
+                Do not add line breaks or unnecessary spaces, just give me the comma-separated keyword list.
+                """
+
   },
   'SIZE_ENFORCEMENT': """
                     I will give you one text for a Google Ads ad that is too long.

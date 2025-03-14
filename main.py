@@ -32,6 +32,7 @@ from utils.entry import Entry
 from utils.enums import Destination
 from utils.enums import FirstTermSource
 from utils.enums import SecondTermSource
+from utils.firestore_helper import FirestoreHelper
 from utils.utils import Utils
 
 app = Flask(__name__)
@@ -45,14 +46,57 @@ logging.root.setLevel(logging.INFO)
 config = Utils.load_config('config.json')
 
 content_generator_service = ContentGeneratorService(config)
+firestore_helper = FirestoreHelper()
 
 
 tasks = {}
 task_id = 0
 
 
+@app.route('/settings', methods=['GET'])
+def get_settings():
+  """Get current settings.
+
+  Returns:
+    A JSON response with the status.
+  """
+  try:
+    settings = firestore_helper.get_settings()
+    if settings is None:
+      return jsonify({'status': 'failed', 'detail': 'Settings document not found.'}), 404
+    return jsonify(settings), 200
+  except Exception as e:
+    logging.exception("Error retrieving settings:")
+    return jsonify({'status': 'failed', 'detail': f'Failed to retrieve settings: {str(e)}'}), 500
+
+
+@app.route('/settings', methods=['POST'])
+def set_settings():
+  """Set current settings.
+
+  Args:
+    settings(dict): The settings dictionary.
+
+  Returns:
+    A JSON response with the status.
+  """
+
+  if request.content_type == 'application/json':
+    if request.data:  # Check if there is data
+      try:
+        data = request.get_json()
+        firestore_helper.save_settings(data)
+        return jsonify({'status': 'success', 'received': data}), 200
+      except ValueError:
+        return jsonify({'error': 'Invalid settings JSON body'}), 400
+    else:
+      return jsonify({'message': 'No settings JSON body provided'}), 400
+  else:
+    return jsonify({'error': 'Unsupported Media Type: Content-Type must be application/json'}), 415
+
+
 @app.route('/tasks/<int:tid>', methods=['GET'])
-def get_task_status(tid):
+def get_task_status(tid: int):
   """Get status given a task id.
 
   Args:
@@ -530,7 +574,7 @@ def __validate_body_params(
   if 'language' in data:
     if not isinstance(data['language'], str):
       raise ValueError('Invalid language body param. Must be of type str.')
-  if not'language' in data:
+  if 'language' not in data:
     data['language'] = 'ES'
 
   return data

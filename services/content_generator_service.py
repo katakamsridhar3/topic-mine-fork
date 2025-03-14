@@ -45,9 +45,7 @@ class ContentGeneratorService:
 
   def __init__(self, config: dict[str, str]):
     self.config = config
-    self.bigquery_helper = BigQueryHelper(self.config)
-    if 'google_ads_developer_token' in self.config and 'login_customer_id' in self.config:
-        self.keyword_suggestion_service = KeywordSuggestionService(self.config)
+    self.bigquery_helper = BigQueryHelper()
     self.sheets_helper = GoogleSheetsHelper(self.config)
 
   def generate_content(
@@ -70,7 +68,18 @@ class ContentGeneratorService:
       list(Entry): A list of entries with content generated, ready to export.
     """
     logging.info(' Starting method generate_content')
-    self.gemini_helper = GeminiHelper(self.config, self.body_params['gemini_model'])
+    self.gemini_helper = GeminiHelper(
+        body_params['language'],
+        body_params['gemini_model']
+    )
+    if 'google_ads_developer_token' in body_params and 'google_ads_customer_id' in body_params:
+      self.keyword_suggestion_service = KeywordSuggestionService(
+          self.config,
+          body_params['google_ads_customer_id'],
+          body_params['google_ads_developer_token'],
+          body_params['language'],
+          body_params['country']
+      )
     self.first_term_source = first_term_source
     self.second_term_source = second_term_source
     self.must_find_relationship = must_find_relationship
@@ -699,16 +708,13 @@ class ContentGeneratorService:
       list[str]: A list of keywords.
     """
     keywords = []
-    if 'google_ads_developer_token' in self.config and 'login_customer_id' in self.config:
+    if 'google_ads_developer_token' in self.body_params and 'google_ads_customer_id' in self.body_params:
       keywords = self.keyword_suggestion_service.get_keywords(term)
 
     if not keywords:
-      prompt = f"""
-                Dado el término '{term}', dame una lista de hasta 10 keywords para Google ads que pueda usar relacionadas con el término.
-                Dame el resultado de la siguiente forma:
-                ["Característica 1", "Característica 2", ..., "Característica N"]
-                La respuesta debes darmela exactamente en el formato que te he pasado, sin agregar saltos de linea ni espacios innecesarios. Solo debe ser una lista de keywords separados por comas, todo entre corchetes y nada mas.
-                """
+      prompt = prompts[self.body_params['language']]['GENERATION']['KEYWORDS'].format(
+          term=term,
+          )
       keywords = self.gemini_helper.generate_text_list(prompt)
 
     return keywords

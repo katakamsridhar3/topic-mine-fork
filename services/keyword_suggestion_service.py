@@ -33,22 +33,35 @@ class KeywordSuggestionService():
   """A service for generating keyword suggestions using the Google Ads API.
   """
 
-  def __init__(self, config: dict[str, str]):
+  def __init__(
+      self,
+      config: (dict[str, str]),
+      google_ads_customer_id: str,
+      google_ads_developer_token: str,
+      language: str,
+      country: str
+    ):
     """Initialize a KeywordSuggestionService instance.
 
     Args:
       config (dict[str, str]): A dictionary containing configuration parameters.
+      google_ads_customer_id (str): The Google Ads customer ID.
+      google_ads_developer_token (str): The Google Ads developer token.
+      language (str): The language to generate keywords for.
+      country (str): The country to generate keywords for.
     """
     authenticator = Authenticator()
     self.creds = authenticator.authenticate(config)
     self.config = config
-    self.client = GoogleAdsClient(
-        self.creds,
-        self.config['google_ads_developer_token'],
-        login_customer_id=self.config['login_customer_id']
-        )
+    self.google_ads_customer_id = google_ads_customer_id
+    self.google_ads_developer_token = google_ads_developer_token
+    self.language = language
+    self.country = country
 
-  def get_keywords(self, terms) -> list[str]:
+  def get_keywords(
+      self,
+      terms: list[str],
+    ) -> list[str]:
     """Retrieve keyword suggestions for a list of terms.
 
     Args:
@@ -57,7 +70,11 @@ class KeywordSuggestionService():
     Returns:
       list[str]: A list of keyword suggestions.
     """
-    customer_id = self.config['login_customer_id']
+    self.client = GoogleAdsClient(
+        self.creds,
+        self.google_ads_developer_token,
+        login_customer_id=self.google_ads_customer_id
+        )
 
     location_ids = {
         'Argentina': '2032',
@@ -72,23 +89,23 @@ class KeywordSuggestionService():
         'United States': '2840'
         }
 
-    if self.config['language'] == 'ES':
+    if self.language == 'ES':
       language_id = '1003'  # ES
       location_id = '2484'  # MX, default value if language is ES
-    elif self.config['language'] == 'EN':
+    elif self.language == 'EN':
       language_id = '1000'  # EN
       location_id = '2840'  # US, default value if language is EN
-    elif self.config['language'] == 'PT':
+    elif self.language == 'PT':
       language_id = '1014'  # PT
       location_id = '2076'  # BR, default value if language is PT
     else:
-      raise ValueError(f'Language {self.config["language"]} not supported')
+      raise ValueError(f'Language {self.language} not supported')
 
     if (
-        self.config['country'] is not None and
-        self.config['country'].capitalize() in location_ids
+        self.country is not None and
+        self.country.capitalize() in location_ids
         ):
-      location_id = location_ids[self.config['country']]
+      location_id = location_ids[self.country]
 
     try:
       for _ in range(5):
@@ -112,7 +129,7 @@ class KeywordSuggestionService():
 
           request = client.get_type('GenerateKeywordIdeasRequest')
 
-          request.customer_id = customer_id
+          request.customer_id = self.google_ads_customer_id
           request.language = language_rn
 
           request.geo_target_constants.extend(location_rns)

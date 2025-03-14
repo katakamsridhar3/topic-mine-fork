@@ -28,14 +28,11 @@ class ACSFeedDestination:
   It transforms and loads data to a Google sheet
   with the correct format of an ACS feed.
   """
-
-  config: dict[str, str]
   sheets_helper: GoogleSheetsHelper
 
   def __init__(self, config: dict[str, str]):
     """Init method for ACSFeedDestination."""
     self.sheets_helper = GoogleSheetsHelper(config)
-    self.config = config
 
   def write_destination_output(
       self,

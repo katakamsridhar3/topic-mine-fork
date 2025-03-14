@@ -71,6 +71,24 @@ export class SettingsComponent {
     this.globalService.setCustomerId(this.customerIdFormControl.value!.replaceAll('-', ''));
     this.globalService.setDeveloperToken(this.developerTokenFormControl.value!);
     this.globalService.setGeminiModel(this.geminiModelFormControl.value ?? 'gemini-2.0-flash');
+
+    this.isSaveButtonDisabled = true;
+    this.isSendingRequest = true;
+    this.requestFailed = false;
+
+    try {
+      this.globalService.saveSettingsToBackend();
+      this.isSaveButtonDisabled = false;
+      this.isSendingRequest = false;
+      this.requestFailed = false;
+    } catch (error) {
+      this.showToast('error', 'Error saving settings', 'Settings could not be saved, please try again. Details: ' + error)
+      this.isSendingRequest = false;
+      this.isSaveButtonDisabled = false;
+      this.requestFailed = true;
+    }
+
+
   }
 
 }

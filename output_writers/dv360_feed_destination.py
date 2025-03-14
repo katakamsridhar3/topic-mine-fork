@@ -29,13 +29,11 @@ class DV360FeedDestination:
   with the correct format of an DV360 feed.
   """
 
-  config: dict[str, str]
   sheets_helper: GoogleSheetsHelper
 
   def __init__(self, config: dict[str, str]):
     """Init method for DV360FeedDestination."""
     self.sheets_helper = GoogleSheetsHelper(config)
-    self.config = config
 
   def write_destination_output(
       self,

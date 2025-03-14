@@ -22,7 +22,6 @@ import time
 import vertexai
 
 import dirtyjson
-import google.generativeai as genai
 from google.generativeai.types import HarmCategory, HarmBlockThreshold
 from prompts.prompts import prompts
 from vertexai.generative_models import GenerativeModel
@@ -39,10 +38,10 @@ GENERATION_CONFIG = {
     'top_k': 40
 }
 SAFETY_SETTINGS = {
-    HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
-    HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH
+    # HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    # HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    # HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    # HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_ONLY_HIGH
 }
 
 TIME_INTERVAL_BETWEEN_REQUESTS = 0
@@ -54,21 +53,20 @@ class GeminiHelper:
   """Gemini helper to perform Gemini API requests.
   """
 
-  def __init__(self, config: dict[str, str], model: str = None) -> None:
-    self.config = config
+  def __init__(
+      self,
+      language: str,
+      model: str = None
+    ) -> None:
+    self.language = language
 
     if model:
       model_name = model
     else:
-      model_name = 'gemini-1.5-flash'
+      model_name = 'gemini-2.0-flash'
 
-    if 'gemini_api_key' in config:
-      key = config['gemini_api_key']
-      genai.configure(api_key=key)
-      self.model = genai.GenerativeModel(model_name)
-    else:
-      vertexai.init(project=config['project_id'], location='us-central1')
-      self.model = GenerativeModel(model_name)
+    vertexai.init()
+    self.model = GenerativeModel(model_name)
 
   def generate_dict(self, prompt: str) -> dict:
     """Makes a request to Gemini and returns a dict.
@@ -263,12 +261,12 @@ class GeminiHelper:
       raise ValueError(message)
 
     if t == 'paths':
-      return prompts[self.config['language']]['PATH_SIZE_ENFORCEMENT'].format(
+      return prompts[self.self.language]['PATH_SIZE_ENFORCEMENT'].format(
           max_length=max_length,
           copy=copy,
           )
 
-    return prompts[self.config['language']]['SIZE_ENFORCEMENT'].format(
+    return prompts[self.self.language]['SIZE_ENFORCEMENT'].format(
         max_length=max_length,
         copy=copy,
         )

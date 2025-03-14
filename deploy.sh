@@ -16,6 +16,8 @@ project_region=$(cat config.json | jq -r '.project_region // "us-central1"')
 cloud_run_service=$(cat config.json | jq -r '.cloud_run_service // "topic-mine"')
 service_account_name=$(cat config.json | jq -r '.service_account_name // "topic-mine-service-account"')
 
+database_id="topic-mine-settings-database"
+
 echo "Setting Google Cloud project..."
 gcloud config set project "$project_id"
 
@@ -35,6 +37,9 @@ gcloud projects add-iam-policy-binding $project_id \
 gcloud projects add-iam-policy-binding $project_id \
     --member serviceAccount:$service_account_name@$project_id.iam.gserviceaccount.com \
     --role roles/run.invoker
+
+echo "Creating Firestore database..."
+gcloud firestore databases create --database="$database_id" --location="$project_region" --project="$project_id"
 
 echo "Deploying Cloud Run..."
 gcloud run deploy $cloud_run_service --region=$project_region --source="." --allow-unauthenticated

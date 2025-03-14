@@ -90,6 +90,14 @@ export class DrawerComponent {
   path: string = '';
   body: any = {};
 
+  ngOnInit() {
+    try {
+      this.globalService.retrieveSettingsFromBackend();
+    } catch (error) {
+      this.showToast('error', 'Error retrieving settings', '' + error)
+    }
+  }
+
   showToast(severity: string, summary: string, detail: string) {
     this.messageService.add({ severity: severity, summary: summary, detail: detail, sticky: true });
   }
@@ -233,13 +241,17 @@ export class DrawerComponent {
         'starting_row': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.startingRow,
         'term_column': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.termColumn,
         'limit': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.limit,
-
-        // Optional
-        'term_description_column': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.descriptionColumn,
-        'sku_column': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.skuColumn,
-        'url_column': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.urlColumn,
-        'imageUrl_column': this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.imageUrlColumn,
       }
+
+      // Optional
+      if (this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.descriptionColumn)
+        this.body['first_term_source_config']['term_description_column'] = this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.descriptionColumn
+      if (this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.skuColumn)
+        this.body['first_term_source_config']['sku_column'] = this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.skuColumn
+      if (this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.urlColumn)
+        this.body['first_term_source_config']['url_column'] = this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.urlColumn
+      if (this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.imageUrlColumn)
+        this.body['first_term_source_config']['imageUrl_column'] = this.dataSourcesConfig!.firstTermSourceConfig.googleSheetsConfig.imageUrlColumn
     } else if (this.dataSourcesConfig!.firstTermSourceConfig.type === 'BigQuery') {
       this.body['first_term_source_config'] = {
         // Mandatory
@@ -247,14 +259,18 @@ export class DrawerComponent {
         'dataset': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.dataset,
         'table': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.table,
         'term_column': this.dataSourcesConfig!.firstTermSourceConfig.termColumn,
-
-        // Optional
-        'term_description_column': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.descriptionColumn,
-        'sku_column': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.skuColumn,
-        'url_column': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.urlColumn,
-        'imageUrl_column': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.imageUrlColumn,
-        'limit': this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.limit ?? 0,
       }
+
+      // Optional
+      if (this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.descriptionColumn)
+        this.body['first_term_source_config']['term_description_column'] = this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.descriptionColumn
+      if (this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.skuColumn)
+        this.body['first_term_source_config']['sku_column'] = this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.skuColumn
+      if (this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.urlColumn)
+        this.body['first_term_source_config']['url_column'] = this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.urlColumn
+      if (this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.imageUrlColumn)
+        this.body['first_term_source_config']['imageUrl_column'] = this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.imageUrlColumn
+      this.body['first_term_source_config']['limit'] = this.dataSourcesConfig!.firstTermSourceConfig.bigQueryConfig.limit ?? 0
     } else if (this.dataSourcesConfig!.firstTermSourceConfig.type === 'List of terms') {
       this.body['first_term_source_config'] = {
         // Mandatory
@@ -271,10 +287,11 @@ export class DrawerComponent {
           'starting_row': this.dataSourcesConfig!.secondTermSourceConfig.googleSheetsConfig.startingRow,
           'term_column': this.dataSourcesConfig!.secondTermSourceConfig.googleSheetsConfig.termColumn,
           'limit': this.dataSourcesConfig!.secondTermSourceConfig.googleSheetsConfig.limit,
-
-          // Optional
-          'term_description_column': this.dataSourcesConfig!.secondTermSourceConfig.googleSheetsConfig.descriptionColumn
         }
+
+        // Optional
+        if (this.dataSourcesConfig!.secondTermSourceConfig.googleSheetsConfig.descriptionColumn)
+          this.body['second_term_source_config']['term_description_column'] = this.dataSourcesConfig!.secondTermSourceConfig.googleSheetsConfig.descriptionColumn
       } else if (this.dataSourcesConfig!.secondTermSourceConfig.type === 'BigQuery') {
         this.body['second_term_source_config'] = {
           // Mandatory
@@ -282,11 +299,13 @@ export class DrawerComponent {
           'dataset': this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.dataset,
           'table': this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.table,
           'term_column': this.dataSourcesConfig!.secondTermSourceConfig.termColumn,
-
-          // Optional
-          'term_description_column': this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.descriptionColumn,
-          'limit': this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.limit ?? 0,
         }
+
+        // Optional
+        if (this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.descriptionColumn)
+          this.body['second_term_source_config']['term_description_column'] = this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.descriptionColumn
+        this.body['second_term_source_config']['limit'] = this.dataSourcesConfig!.secondTermSourceConfig.bigQueryConfig.limit ?? 0
+
       } else if (this.dataSourcesConfig!.secondTermSourceConfig.type === 'Google Trends') {
         this.body['second_term_source_config'] = {
           'limit':this.dataSourcesConfig!.secondTermSourceConfig.googleTrendsConfig.limit
@@ -299,30 +318,46 @@ export class DrawerComponent {
       'sheet_name': this.destinationConfig!.sheetName,
     }
 
-    this.body['headlines_blocklist'] = this.contentGenerationConfig!.headlinesBlocklist;
-    this.body['headlines_regexp_blocklist'] = this.contentGenerationConfig!.headlinesRegexBlocklist;
-    this.body['descriptions_blocklist'] = this.contentGenerationConfig!.headlinesBlocklist;
+    this.body['advertiser_name'] = this.contentGenerationConfig!.advertiserName;
+    this.body['country'] = this.contentGenerationConfig!.country;
+
+    // OPTIONAL BODY PARAMS
+    if (this.contentGenerationConfig!.headlinesBlocklist)
+      this.body['headlines_blocklist'] = this.contentGenerationConfig!.headlinesBlocklist;
+    if (this.contentGenerationConfig!.headlinesRegexBlocklist)
+      this.body['headlines_regexp_blocklist'] = this.contentGenerationConfig!.headlinesRegexBlocklist;
+    if (this.contentGenerationConfig!.descriptionsBlocklist)
+      this.body['descriptions_blocklist'] = this.contentGenerationConfig!.descriptionsBlocklist;
+    if (this.contentGenerationConfig!.descriptionsRegexBlocklist)
     this.body['descriptions_regexp_blocklist'] = this.contentGenerationConfig!.descriptionsRegexBlocklist;
 
-    this.body['generic_copies'] = {
-      'headlines': this.contentGenerationConfig!.genericHeadlines,
-      'descriptions': this.contentGenerationConfig!.genericDescriptions,
-    }
+    if (this.contentGenerationConfig?.genericHeadlines || this.contentGenerationConfig?.genericDescriptions)
+      this.body['generic_copies'] = {};
+    if (this.contentGenerationConfig?.genericHeadlines)
+      this.body['generic_copies']['headlines'] = this.contentGenerationConfig!.genericHeadlines;
+    if (this.contentGenerationConfig?.genericDescriptions)
+      this.body['generic_copies']['descriptions'] = this.contentGenerationConfig!.genericDescriptions;
 
-    this.body['enable_feature_extraction'] = this.contentGenerationConfig!.enableFeatureExtraction;
+    if (this.contentGenerationConfig!.enableFeatureExtraction)
+      this.body['enable_feature_extraction'] = this.contentGenerationConfig!.enableFeatureExtraction;
 
     if (this.contentGenerationConfig!.enableURLValidation)
       this.body['enable_url_validation'] = 'REMOVE_BROKEN_URLS'
-
     // TODO: MUST IMPLEMENT IN THE FRONTEND
     // this.body['default_url'] = this.dataSourcesConfig!.defaultUrl;
-    this.body['generate_paths'] = this.contentGenerationConfig!.generatePaths;
 
-    this.body['generate_keywords'] = this.contentGenerationConfig!.generateKeywords;
-    this.body['advertiser_name'] = this.contentGenerationConfig!.advertiserName;
-    this.body['country'] = this.contentGenerationConfig!.country;
-    this.body['gemini_model'] = this.globalService.geminiModel;
-    this.body['language'] = this.contentGenerationConfig!.language;
+    if(this.contentGenerationConfig!.generateKeywords)
+      this.body['generate_keywords'] = this.contentGenerationConfig!.generateKeywords;
+    if(this.contentGenerationConfig!.generatePaths)
+      this.body['generate_paths'] = this.contentGenerationConfig!.generatePaths;
+     if(this.globalService.geminiModel)
+       this.body['gemini_model'] = this.globalService.geminiModel;
+     if(this.contentGenerationConfig!.language)
+       this.body['language'] = this.contentGenerationConfig!.language;
+     if(this.globalService.customerId)
+       this.body['google_ads_customer_id'] = this.globalService.customerId;
+     if(this.globalService.developerToken)
+       this.body['google_ads_developer_token'] = this.globalService.developerToken;
   }
 
 

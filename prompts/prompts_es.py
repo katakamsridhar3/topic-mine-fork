@@ -131,7 +131,13 @@ prompts_es = {
                                         Dame el resultado en el siguiente formato:
                                         ["escribe aqui la parte 1 del path", "escribe aqui la parte 2 del path"]
                                         La respuesta debes darmela exactamente en el formato que te he pasado, sin agregar saltos de linea ni espacios innecesarios. Solo debe ser una lista de textos separados por comas, todo entre corchetes y nada mas.
-                                        """
+                                        """,
+        'KEYWORDS': """
+                    Dado el término '{term}', dame una lista de hasta 10 keywords para Google ads que pueda usar relacionadas con el término.
+                    Dame el resultado de la siguiente forma:
+                    ["Keyword 1", "Keyword 2", ..., "Keyword N"]
+                    La respuesta debes darmela exactamente en el formato que te he pasado, sin agregar saltos de linea ni espacios innecesarios. Solo debe ser una lista de keywords separados por comas, todo entre corchetes y nada mas.
+                    """
     },
     'SIZE_ENFORCEMENT': """
                         Te daré un texto de anuncio de Google ads que tengo que es demasiado largo.
