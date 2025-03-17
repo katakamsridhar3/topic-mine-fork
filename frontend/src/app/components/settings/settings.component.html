@@ -82,7 +82,7 @@
   </div> -->
 
   <div class="row mt-3">
-    <div class="col-6">
+    <!-- <div class="col-6">
       <div>
         <label for="base-url" class="form-label">Topic Mine base URL*</label>
         <div class="input-group">
@@ -90,8 +90,8 @@
         </div>
       </div>
       <div class="form-text">URL of the Cloud Run service where Topic Mine is deployed. Can be obtained in the GCP console -> Cloud Run -> Topic Mine service details.</div>
-    </div>
-    <div class="col-6">
+    </div> -->
+    <div class="col-12">
       <label for="gemini-model-input" class="form-label">Gemini model</label>
       <div class="input-group">
         <input placeholder="gemini-2.0.flash" type="text" class="form-control" id="gemini-model-input" aria-describedby="basic-addon3 basic-addon4" matInput [formControl]="geminiModelFormControl" [errorStateMatcher]="matcher" [(ngModel)]="this.globalService.geminiModel">

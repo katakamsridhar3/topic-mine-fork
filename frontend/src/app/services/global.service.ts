@@ -33,7 +33,7 @@ export class GlobalService {
   retrieveSettingsFromBackend() {
     this.http.get(this.baseUrl + '/settings').subscribe({
       next: (response: any) => {
-        this.baseUrl = response['base_url'];
+        // this.baseUrl = response['base_url'];
         this.customerId = response['google_ads_customer_id'];
         this.developerToken = response['google_ads_developer_token'];
         this.geminiModel = response['gemini_model'];
@@ -47,7 +47,7 @@ export class GlobalService {
 
   saveSettingsToBackend() {
     var body: any = {}
-    body['base_url'] = this.baseUrl;
+    // body['base_url'] = this.baseUrl;
     body['google_ads_customer_id'] = this.customerId;
     body['google_ads_developer_token'] = this.developerToken;
     body['gemini_model'] = this.geminiModel;

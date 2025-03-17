@@ -40,6 +40,11 @@ import { GlobalService } from '../../services/global.service';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Ripple } from 'primeng/ripple';
+import { tap } from 'rxjs';
+
+export interface AppConfig {
+  url: string;
+}
 
 @Component({
   selector: 'app-drawer',
@@ -92,6 +97,10 @@ export class DrawerComponent {
 
   ngOnInit() {
     try {
+      this.http.get<AppConfig>('/assets/config.json').pipe(
+        tap((config: AppConfig) => (this.globalService.setBaseUrl(config.url)))
+      );
+
       this.globalService.retrieveSettingsFromBackend();
     } catch (error) {
       this.showToast('error', 'Error retrieving settings', '' + error)
