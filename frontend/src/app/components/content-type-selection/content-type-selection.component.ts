@@ -33,14 +33,14 @@ export class ContentTypeSelectionComponent {
   }
 
   oneInputTerm() {
-    this.handleTerm("1", null); // No relationship for one input term
+    this.handleTerm("1", null);
   }
 
   twoInputTermFindRelationship() {
-    this.handleTerm("2", false); // Must find relationship is false
+    this.handleTerm("2", true);
   }
 
   twoInputTermForceRelationship() {
-    this.handleTerm("2", true); // Must find relationship is true
+    this.handleTerm("2", false);
   }
 }
