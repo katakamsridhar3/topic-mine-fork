@@ -31,18 +31,25 @@ export class GlobalService {
   }
 
   retrieveSettingsFromBackend() {
-    this.http.get(this.baseUrl + '/settings').subscribe({
-      next: (response: any) => {
-        // this.baseUrl = response['base_url'];
-        this.customerId = response['google_ads_customer_id'];
-        this.developerToken = response['google_ads_developer_token'];
-        this.geminiModel = response['gemini_model'];
-      },
-      error: (error) => {
-        console.log('Error retrieving settings from backend. Details: ' + error)
-        throw error;
-      }
-    })
+    // TODO
+    // FIXME
+    // this.http.get(this.baseUrl + '/settings').subscribe({
+    //   next: (response: any) => {
+    //     // this.baseUrl = response['base_url'];
+    //     this.customerId = response['google_ads_customer_id'];
+    //     this.developerToken = response['google_ads_developer_token'];
+    //     this.geminiModel = response['gemini_model'];
+    //   },
+    //   error: (error) => {
+    //     console.log('Error retrieving settings from backend. Details: ' + error)
+    //     throw error;
+    //   }
+    // })
+    this.baseUrl = 'http://127.0.0.1:8080';
+    // this.customerId = response['google_ads_customer_id'];
+    // this.developerToken = response['google_ads_developer_token'];
+    this.geminiModel = 'gemini-2.0-flash';
+
   }
 
   saveSettingsToBackend() {

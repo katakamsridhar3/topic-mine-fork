@@ -569,6 +569,8 @@ def __validate_body_params(
   if 'gemini_model' in data:
     if not isinstance(data['gemini_model'], str):
       raise ValueError('Invalid gemini_model body param. Must be of type str.')
+  if 'gemini_model' not in data:
+    data['gemini_model'] = 'gemini-2.0-flash'
 
   # language optional, defalts to ES (Spanish)
   if 'language' in data:

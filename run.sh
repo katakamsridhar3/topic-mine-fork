@@ -11,7 +11,7 @@
 # limitations under the License.
 
 echo "Starting Topic Mine..."
-flask_app=python main.py &
+python main.py &
 pid=$!
 
 sleep 10

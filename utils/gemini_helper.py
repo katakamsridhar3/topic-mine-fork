@@ -56,14 +56,9 @@ class GeminiHelper:
   def __init__(
       self,
       language: str,
-      model: str = None
+      model_name: str = None
     ) -> None:
     self.language = language
-
-    if model:
-      model_name = model
-    else:
-      model_name = 'gemini-2.0-flash'
 
     vertexai.init()
     self.model = GenerativeModel(model_name)
@@ -261,12 +256,12 @@ class GeminiHelper:
       raise ValueError(message)
 
     if t == 'paths':
-      return prompts[self.self.language]['PATH_SIZE_ENFORCEMENT'].format(
+      return prompts[self.language]['PATH_SIZE_ENFORCEMENT'].format(
           max_length=max_length,
           copy=copy,
           )
 
-    return prompts[self.self.language]['SIZE_ENFORCEMENT'].format(
+    return prompts[self.language]['SIZE_ENFORCEMENT'].format(
         max_length=max_length,
         copy=copy,
         )
