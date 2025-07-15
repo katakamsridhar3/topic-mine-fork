@@ -65,30 +65,33 @@ class KeywordSuggestionService():
         'Colombia': '2170',
         'Mexico': '2484',
         'Peru': '2604',
-
         'Brazil': '2076',
-
         'Canada': '2124',
-        'United States': '2840'
+        'United States': '2840',
+        'India': '3565'  # ✅ Added India
         }
 
+    # Set default language/location based on language
     if self.config['language'] == 'ES':
       language_id = '1003'  # ES
-      location_id = '2484'  # MX, default value if language is ES
+      location_id = '2484'  # MX, default
     elif self.config['language'] == 'EN':
       language_id = '1000'  # EN
-      location_id = '2840'  # US, default value if language is EN
+      location_id = '2840'  # US, default
     elif self.config['language'] == 'PT':
       language_id = '1014'  # PT
-      location_id = '2076'  # BR, default value if language is PT
+      location_id = '2076'  # BR, default
     else:
       raise ValueError(f'Language {self.config["language"]} not supported')
 
+    # Override with country-specific location if found
     if (
-        self.config['country'] is not None and
+        self.config.get('country') and
         self.config['country'].capitalize() in location_ids
         ):
-      location_id = location_ids[self.config['country']]
+      location_id = location_ids[self.config['country'].capitalize()]
+    else:
+      logging.warning(f"Country '{self.config.get('country')}' not found in mapping, using default location ID.")
 
     try:
       for _ in range(5):
@@ -119,9 +122,7 @@ class KeywordSuggestionService():
           request.include_adult_keywords = False
           request.keyword_plan_network = keyword_plan_network
 
-          # To generate kwrd ideas with only a list of keywords and no page_url
-          # we need to initialize a KeywordSeed obj and set 'keywords' field
-          # to be a list of StringValue objects.
+          # To generate keyword ideas using only a list of keywords
           request.keyword_seed.keywords.extend(terms)
           keyword_ideas = keyword_plan_idea_service.generate_keyword_ideas(
               request=request
@@ -140,7 +141,7 @@ class KeywordSuggestionService():
     except Exception as e:
       logging.error(' Error in get_keywords: %s', str(e))
 
-    return[]
+    return []
 
   def __map_locations_ids_to_resource_names(self, location_ids) -> list[str]:
     """Converts a list of location IDs to resource names.

@@ -293,7 +293,7 @@ class ContentGeneratorService:
     if self.body_params['second_term_source_config']['limit'] < 9999:
       limit = f"LIMIT {self.body_params['second_term_source_config']['limit']}"
 
-    if self.config["country"] == "United States":
+    if self.config.get("country", "United States") == "United States":
       query = f"""
         SELECT
           term, ARRAY_AGG(STRUCT(rank,week,score,refresh_date) ORDER BY week DESC LIMIT 1) term_info
@@ -325,7 +325,7 @@ class ContentGeneratorService:
                       FROM
                       `bigquery-public-data.google_trends.international_top_terms`
                       )
-                  AND country_name = '{self.config['country']}'
+                  AND country_name = '{self.config.get("country", "United States")}'
               GROUP BY
                   term
               ORDER BY
@@ -1057,7 +1057,7 @@ class ContentGeneratorService:
                 n=number_of_copies,
                 length=length,
                 term=entry.term,
-                location=self.config['country'],
+                location=self.config.get("country", "United States"),
                 company=self.config['advertiser']
                 )
       else:
@@ -1069,7 +1069,7 @@ class ContentGeneratorService:
                 length=length,
                 term=entry.term,
                 term_description=entry.term_description,
-                location=self.config['country'],
+                location=self.config.get("country", "United States"),
                 company=self.config['advertiser']
                 )
     elif (
@@ -1086,7 +1086,7 @@ class ContentGeneratorService:
               term_description=entry.term_description,
               associative_term=entry.associative_term,
               associative_term_description=entry.associative_term_description,
-              location=self.config['country'],
+              location=self.config.get("country", "United States"),
               company=self.config['advertiser'],
               association_reason=entry.association_reason
               )
@@ -1103,7 +1103,7 @@ class ContentGeneratorService:
               term=entry.term,
               term_description=entry.term_description,
               associative_term=entry.associative_term,
-              location=self.config['country'],
+              location=self.config.get("country", "United States"),
               company=self.config['advertiser'],
               association_reason=entry.association_reason
               )
@@ -1120,7 +1120,7 @@ class ContentGeneratorService:
               term=entry.term,
               associative_term=entry.associative_term,
               associative_term_description=entry.associative_term_description,
-              location=self.config['country'],
+              location=self.config.get("country", "United States"),
               company=self.config['advertiser'],
               association_reason=entry.association_reason
               )
@@ -1136,7 +1136,7 @@ class ContentGeneratorService:
               length=length,
               term=entry.term,
               associative_term=entry.associative_term,
-              location=self.config['country'],
+              location=self.config.get("country", "United States"),
               company=self.config['advertiser'],
               association_reason=entry.association_reason
               )

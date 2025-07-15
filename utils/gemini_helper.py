@@ -67,11 +67,11 @@ class GeminiHelper:
 
     if 'gemini_model' in config and config["gemini_model"]:
       model_name = config['gemini_model']
-      models = ['gemini-1.5-flash', 'gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-2.0-flash']
+      models = ['gemini-2.5-flash', 'gemini-2.5-flash-8b', 'gemini-1.5-pro', 'gemini-2.0-flash']
       if model_name not in models:
-        model_name = 'gemini-1.5-flash'
+        model_name = 'gemini-2.5-flash'
     else:
-      model_name = 'gemini-1.5-flash'
+      model_name = 'gemini-2.5-flash'
 
     vertexai.init(project=config['project_id'], location='us-central1')
     self.model = GenerativeModel(model_name)
