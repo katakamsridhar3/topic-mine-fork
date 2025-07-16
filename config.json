@@ -1,8 +1,8 @@
 {
-  "advertiser": "American Express",
-  "project_id": "project-ks-465612",
+  "advertiser": "Company Name",
+  "project_id": "Project ID",
   "input_source": "sheets",
-  "input_sheet_url": "https://docs.google.com/spreadsheets/d/1T3z6B8Lbjv_B5PfavhTb3TDEW4VSYYSp9wQ3q2dcqs0/edit#gid=0",
+  "input_sheet_url": "Google Sheet full URL",
   "input_sheet_tab": "Input",
   "output_format": "sheets",
   "output_sheet_tab": "Output",
